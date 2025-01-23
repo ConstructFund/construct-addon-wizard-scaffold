@@ -3,9 +3,15 @@ import { execSync, exec } from "child_process";
 import version from "../version.js";
 import * as chalkUtils from "./chalkUtils.js";
 import fromConsole from "./fromConsole.js";
+import validateSrc from "./validateSrc.js";
 
 export default function publish(type) {
   chalkUtils.step("Publishing addon");
+
+  // validate src folder 
+  if (validateSrc()) {
+    return;
+  }
 
   // check type is major, minor, patch, revision or a version with the format x.x.x.x
   let newVersion = "";
