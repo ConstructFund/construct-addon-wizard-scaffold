@@ -54,8 +54,8 @@ const Instance = createInstance(
       if (runtimeConfig.hasWrapperExtension) {
         superObject.wrapperComponentId = runtimeConfig.id;
       }
-      this.events = {};
       super(superObject);
+      this.events = {};
     }
   }
 );
