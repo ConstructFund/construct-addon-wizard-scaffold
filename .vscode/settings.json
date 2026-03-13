@@ -1,6 +1,6 @@
 {
   "javascript.updateImportsOnFileMove.enabled": "never",
-  ".files.exclude": {
+  "files.exclude": {
     "build": true,
     "generated": true,
     "template": true,
