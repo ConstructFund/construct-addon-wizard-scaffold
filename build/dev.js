@@ -54,10 +54,11 @@ export default async function dev() {
         return;
       }
       chalkUtils.info(
-        `Addon served at:\n${chalkUtils.infoHighlight(localHostURL())}`
+        `Addon served at:\n${chalkUtils.infoHighlight(localHostURL())}`,
       );
     });
     childProcess.stdout.pipe(process.stdout);
+    childProcess.stderr.pipe(process.stderr);
   };
 
   // Run initial build

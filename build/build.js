@@ -11,6 +11,7 @@ const buildSteps = [
   "./runAceDefiner.js",
   "./generateAceFiles.js",
   "./validateAceConfigs.js",
+  "./validateExposedNames.js",
   "./generateComboEnums.js",
   "./buildstepWebpack.js",
   "./generateAcesJSON.js",
@@ -56,7 +57,7 @@ export default async function build(buildSteps) {
       }
     } catch (e) {
       chalkUtils.uncaughtError(
-        `Error in build step ${step}:\n${e.message}\n${e.stack}`
+        `Error in build step ${step}:\n${e.message}\n${e.stack}`,
       );
       failed = true;
       if (spinner) {
@@ -93,7 +94,7 @@ export default async function build(buildSteps) {
   if (optionalErrors.length > 0 && !disableWarnings) {
     chalkUtils.warningList(
       "Optional errors occurred in the following build steps",
-      optionalErrors
+      optionalErrors,
     );
     chalkUtils.newLine();
 
@@ -101,9 +102,9 @@ export default async function build(buildSteps) {
       tips.push(
         chalkUtils._tip(
           `To disable warnings, set ${chalkUtils.tipHighlight(
-            "disableWarnings"
-          )} in the build config.`
-        )
+            "disableWarnings",
+          )} in the build config.`,
+        ),
       );
     }
   }
@@ -112,9 +113,9 @@ export default async function build(buildSteps) {
     tips.push(
       chalkUtils._tip(
         `To disable tips, set ${chalkUtils.tipHighlight(
-          "disableTips"
-        )} in the build config.`
-      )
+          "disableTips",
+        )} in the build config.`,
+      ),
     );
     chalkUtils.tipList(tips, `  ${chalkUtils.tipHighlight(buildConfigPath)}`);
     chalkUtils.newLine();
