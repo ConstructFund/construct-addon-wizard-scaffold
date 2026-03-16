@@ -4,19 +4,21 @@ export default function (ADDON_INFO, parentClass) {
     constructor() {
       super(ADDON_INFO.id);
       SDK.Lang.PushContext(
-        `${ADDON_INFO.addonType}s.${ADDON_INFO.id.toLowerCase()}`
+        `${ADDON_INFO.addonType}s.${ADDON_INFO.id.toLowerCase()}`,
       );
       this._info.SetName(self.lang(".name"));
       this._info.SetDescription(self.lang(".description"));
       this._info.SetCategory(ADDON_INFO.category);
       this._info.SetAuthor(ADDON_INFO.author);
       this._info.SetHelpUrl(self.lang(".help-url"));
-      this._info.SetRuntimeModuleMainScript("c3runtime/main.js");
-      this._info.SetC3RuntimeScripts(["c3runtime/main.js"]);
+      if (this._info.SetRuntimeModuleMainScript)
+        this._info.SetRuntimeModuleMainScript("c3runtime/main.js");
+      if (this._info.SetC3RuntimeScripts)
+        this._info.SetC3RuntimeScripts(["c3runtime/main.js"]);
       if (ADDON_INFO.info.icon) {
         this._info.SetIcon(
           ADDON_INFO.info.icon,
-          ADDON_INFO.info.icon.endsWith(".svg") ? "image/svg+xml" : "image/png"
+          ADDON_INFO.info.icon.endsWith(".svg") ? "image/svg+xml" : "image/png",
         );
       }
 
@@ -56,14 +58,14 @@ export default function (ADDON_INFO, parentClass) {
         ADDON_INFO.files.remoteFileDependencies.forEach((file) => {
           this._info.AddRemoteScriptDependency(
             file.src,
-            file.type === "module" ? "module" : undefined
+            file.type === "module" ? "module" : undefined,
           );
         });
       }
 
       if (ADDON_INFO.addonType === "plugin") {
         this._info.SetPluginType(
-          ADDON_INFO.type === "object" ? "object" : "world"
+          ADDON_INFO.type === "object" ? "object" : "world",
         );
 
         if (ADDON_INFO.info && ADDON_INFO.info.AddCommonACEs) {
@@ -79,7 +81,7 @@ export default function (ADDON_INFO, parentClass) {
           ADDON_INFO.info.Set.HasImage
         ) {
           this._info.SetDefaultImageURL(
-            `c3runtime/${ADDON_INFO.info.defaultImageUrl}`
+            `c3runtime/${ADDON_INFO.info.defaultImageUrl}`,
           );
         }
 
@@ -109,8 +111,8 @@ export default function (ADDON_INFO, parentClass) {
                 plugin.plugin && plugin.plugin instanceof Function
                   ? plugin.plugin(this)
                   : plugin.variables
-                  ? this
-                  : undefined,
+                    ? this
+                    : undefined,
               version: plugin.version,
               platform: plugin.platform,
               variables: plugin.variables
