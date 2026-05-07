@@ -1,6 +1,6 @@
 export const config = {
   highlight: false,
-  deprecated: false,
+  isDeprecated: false,
   isTrigger: true,
   listName: "Sample Trigger",
   displayText: "Sample Trigger",

@@ -1,6 +1,6 @@
 export const config = {
   highlight: false,
-  deprecated: false,
+  isDeprecated: false,
   returnType: "string",
   description: "Sample Expression",
   params: [],
