@@ -1,6 +1,6 @@
 export const config = {
   highlight: false,
-  deprecated: false,
+  isDeprecated: false,
   isAsync: false,
   listName: "Sample Action",
   displayText: "Sample Action {0}",

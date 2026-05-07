@@ -1,6 +1,6 @@
 export const config = {
   highlight: false,
-  deprecated: false,
+  isDeprecated: false,
   listName: "Sample Condition",
   displayText: "Sample Condition {0}",
   description: "This is a sample condition",

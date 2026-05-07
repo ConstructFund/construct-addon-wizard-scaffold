@@ -158,7 +158,7 @@ export const config = {
   description: "Action description",
   isAsync: false, // Set true for async actions
   highlight: false,
-  deprecated: false,
+  isDeprecated: false,
   params: [
     {
       id: "param1",
@@ -204,7 +204,7 @@ export const config = {
   returnType: "number", // number, string, or any
   description: "Expression description",
   highlight: false,
-  deprecated: false,
+  isDeprecated: false,
   params: [],
 };
 
