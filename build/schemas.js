@@ -112,15 +112,20 @@ const propertySchema = Joi.object({
       "longtext",
       "check",
       "font",
-      "combo",
-      "color",
-      "object",
-      "group",
-      "link",
-      "info",
-      "projectfile"
+      "combo"
     )
-    .required(),
+    .required()
+    .when(Joi.ref("/addonType"), {
+      is: "plugin",
+      then: Joi.valid(
+        "color",
+        "object",
+        "projectfile",
+        "group",
+        "link",
+        "info"
+      ),
+    }),
 
   id: Joi.string().required(),
   name: Joi.string().required(),
