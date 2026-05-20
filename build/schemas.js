@@ -120,7 +120,13 @@ const propertySchema = Joi.object({
       "info",
       "projectfile"
     )
-    .required(),
+    .required()
+    .when(Joi.ref("/addonType"), {
+      is: "behavior",
+      then: Joi.invalid("group").messages({
+        "any.invalid": '"group" property type is not supported for behaviors',
+      }),
+    }),
 
   id: Joi.string().required(),
   name: Joi.string().required(),

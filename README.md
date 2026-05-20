@@ -8,7 +8,9 @@
 <sub> [See all releases](https://github.com/ConstructFund/construct-addon-wizard-scaffold/releases) </sub> <br>
 
 #### What's New in 0.0.0.0
-- **Added:** Initial release.
+**Added:**
+Initial release.
+
 
 <sub>[View full changelog](#changelog)</sub>
 
@@ -79,5 +81,9 @@ npm run dev
 ---
 ## Changelog
 
-**0.0.0.0**
-- **Added:** Initial release.
+### Version 0.0.0.0
+
+**Added:**
+Initial release.
+
+---
