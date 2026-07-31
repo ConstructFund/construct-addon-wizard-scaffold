@@ -10,13 +10,10 @@
     "open": "^10.1.0",
     "terser": "^5.44.1",
     "vite": "^6.0.7",
-    "webpack-cli": "^6.0.1",
     "yocto-spinner": "^0.1.2"
   },
   "type": "module",
   "scripts": {
-    "webpackBuildStep": "npx webpack build --config ./webpack_buildstep.config.cjs --stats verbose",
-    "webpackExport": "npx webpack build --config ./webpack_export.config.cjs --stats verbose",
     "validateAceConfigs": "cd build && node validateAceConfigs.js",
     "generateAceFiles": "cd build && node generateAceFiles.js",
     "generateLang": "cd build && node generateLangJSON.js",

@@ -1,4 +1,4 @@
-export default function getAceConfigs() {
+export default function getAceFunctions() {
   return Promise.all([
     import("../generated/actions.js"),
     import("../generated/conditions.js"),

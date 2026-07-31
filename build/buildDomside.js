@@ -1,6 +1,4 @@
 import * as chalkUtils from "./chalkUtils.js";
-import webpackConfig from "./webpack_buildstep.config.cjs";
-import doWebpack from "./webpack.js";
 import doVite from "./vite.js";
 import viteConfig from "./vite_domside_config.js";
 import fromConsole from "./fromConsole.js";

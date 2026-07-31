@@ -8,7 +8,6 @@ import build from "./build.js";
 
 // Paths
 const solutionDirectory = "../src_cpp/Project";
-const buildDirectory = "../src_cpp/Build";
 
 const msBuildPaths = [
   // Visual Studio 2022

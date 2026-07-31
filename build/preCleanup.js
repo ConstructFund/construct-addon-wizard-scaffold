@@ -2,7 +2,7 @@ import * as chalkUtils from "./chalkUtils.js";
 import removeDir from "./removeDir.js";
 import fromConsole from "./fromConsole.js";
 
-export default function cleanup() {
+export default function preCleanup() {
   let hadError = false;
 
   chalkUtils.step("Cleaning up");
@@ -19,5 +19,5 @@ export default function cleanup() {
 // if is being called from the command line
 if (fromConsole(import.meta.url)) {
   chalkUtils.fromCommandLine();
-  cleanup();
+  preCleanup();
 }
