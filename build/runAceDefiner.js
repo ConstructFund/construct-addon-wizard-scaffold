@@ -23,5 +23,5 @@ export default async function runAceDefiner() {
 
 if (fromConsole(import.meta.url)) {
   chalkUtils.fromCommandLine();
-  generateAceFiles();
+  runAceDefiner();
 }

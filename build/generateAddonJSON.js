@@ -50,7 +50,7 @@ function addonFromConfig() {
       "lang/en-US.json",
       "aces.json",
       "addon.json",
-      config.icon ? config.icon : "icon.svg",
+      config.info.icon ? config.info.icon : "icon.svg",
       "editor.js",
       ...getFileListFromConfig(config),
     ],

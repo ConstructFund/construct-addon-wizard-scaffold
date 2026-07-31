@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import * as chalkUtils from "./chalkUtils.js";
 import fromConsole from "./fromConsole.js";
+import build from "./build.js";
 import getAceConfigs from "./getAceConfigs.js";
 import getAceFunctions from "./getAceFunctions.js";
 import camelCasify from "./camelCasify.js";
@@ -101,6 +102,6 @@ if (fromConsole(import.meta.url)) {
   const dependsOn = ["./generateAceFiles.js", "./validateAceConfigs.js"];
   build(dependsOn).then((hadError) => {
     if (hadError) return;
-    generateAcesJSON();
+    generateEnums();
   });
 }

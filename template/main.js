@@ -66,7 +66,17 @@ Object.assign(Instance.prototype, exposedExps);
 const Type = createType(typeClass[runtimeConfig.addonType]);
 Object.assign(Type.prototype, enums);
 
-const plugin = createPlugin(baseClass[runtimeConfig.addonType]);
+const plugin = createPlugin(
+  class extends baseClass[runtimeConfig.addonType] {
+    constructor() {
+      const superObject = {};
+      if (runtimeConfig.hasDomside) {
+        superObject.domComponentId = runtimeConfig.id;
+      }
+      super(superObject);
+    }
+  }
+);
 plugin.Acts = Acts;
 plugin.Cnds = Cnds;
 plugin.Exps = Exps;

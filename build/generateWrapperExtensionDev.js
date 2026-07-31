@@ -1,6 +1,7 @@
 import buildWrapperExtension from "./generateWrapperExtension.js";
 import config from "../template/addonConfig.js";
 import fromConsole from "./fromConsole.js";
+import build from "./build.js";
 
 export default async function buildWrapperExtensionDev() {
   if (

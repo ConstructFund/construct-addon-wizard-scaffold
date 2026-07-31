@@ -225,7 +225,14 @@ const configSchema = Joi.object({
   website: Joi.string().required(),
   documentation: Joi.string().required(),
   description: Joi.string().required(),
-  hasDomside: Joi.boolean().required(),
+  hasDomside: Joi.boolean()
+    .required()
+    .when("type", {
+      is: "dom",
+      then: Joi.valid(true).messages({
+        "any.only": "hasDomside must be true when type is PLUGIN_TYPE.DOM",
+      }),
+    }),
   category: Joi.string()
     .required()
     .when("addonType", {

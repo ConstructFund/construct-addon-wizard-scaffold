@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import * as chalkUtils from "./chalkUtils.js";
 import fromConsole from "./fromConsole.js";
+import build from "./build.js";
 import getCategories from "./getCategories.js";
 import getAceConfigs from "./getAceConfigs.js";
 
@@ -25,10 +26,6 @@ function acesFromConfig() {
             };
             Object.keys(ace).forEach((key) => {
               switch (key) {
-                case "category":
-                case "forward":
-                case "handler":
-                case "autoScriptInterface":
                 case "listName":
                 case "displayText":
                 case "description":
@@ -70,10 +67,6 @@ function acesFromConfig() {
             };
             Object.keys(ace).forEach((key) => {
               switch (key) {
-                case "category":
-                case "forward":
-                case "handler":
-                case "autoScriptInterface":
                 case "listName":
                 case "displayText":
                 case "description":
@@ -116,10 +109,6 @@ function acesFromConfig() {
             };
             Object.keys(ace).forEach((key) => {
               switch (key) {
-                case "category":
-                case "forward":
-                case "handler":
-                case "autoScriptInterface":
                 case "listName":
                 case "displayText":
                 case "description":

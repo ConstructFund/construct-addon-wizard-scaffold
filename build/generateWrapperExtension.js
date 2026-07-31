@@ -4,6 +4,7 @@ import { exec } from "child_process";
 import * as chalkUtils from "./chalkUtils.js";
 import config from "../template/addonConfig.js";
 import fromConsole from "./fromConsole.js";
+import build from "./build.js";
 
 // Paths
 const solutionDirectory = "../src_cpp/Project";

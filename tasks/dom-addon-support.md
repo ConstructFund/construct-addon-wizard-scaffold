@@ -301,7 +301,7 @@ const plugin = createPlugin(
   class extends baseClass[runtimeConfig.addonType] {
     constructor() {
       const superObject = {};
-      if (runtimeConfig.hasDomside || runtimeConfig.type === "dom") {
+      if (runtimeConfig.hasDomside) {
         superObject.domComponentId = runtimeConfig.id;
       }
       super(superObject);
@@ -309,6 +309,18 @@ const plugin = createPlugin(
   }
 );
 ```
+
+Gating on `hasDomside` alone is enough, because G2 makes the schema reject
+`type: "dom"` with `hasDomside: false`.
+
+Why the **plugin** needs the id at all, when type A only ever needed it on the instance:
+`ISDKDOMPluginBase` owns the component message channel and the elementId to instance routing
+table (`#n` = component id, `#s` = `Map<elementId, instance>`, `_addElement`, and
+`_addElementMessageHandler`, which registers via
+`GetRuntime().AddDOMComponentMessageHandler(this.#n, ...)` and looks the instance up by
+`e["elementId"]`). One channel serves N element instances, so it cannot live on the instance.
+`ISDKDOMInstanceBase` separately requires the id too, and calls `this.plugin._addElement(this)` in
+its constructor to get its own element id. Both throw without it.
 `ISDKPluginBase.js:1` is `constructor(){super()}` and `ISDKBehaviorBase.js` takes no args either,
 so passing an extra ignored object is harmless for the object/world/behavior paths.
 
@@ -370,10 +382,10 @@ a DOM-side script at all. A type B addon without a DOM-side script is meaningles
      }),
    }),
    ```
-2. Belt and braces in `template/main.js:51` and `template/plugin.js:88` — use
-   `runtimeConfig.hasDomside || runtimeConfig.type === "dom"` and
-   `ADDON_INFO.hasDomside || ADDON_INFO.type === "dom"` respectively, so an out-of-date project
-   config does not produce a silent runtime failure.
+2. Nothing else needed. Do **not** also add `|| type === "dom"` to `template/main.js:51` or
+   `template/plugin.js:88`. It is unreachable: `validateAddonConfig.js` is an early step in both
+   `build.js` and `doDev.js`, and the step loop `break`s on the first failure (`build.js:83-88`),
+   so a config with `type: "dom"` and `hasDomside: false` never reaches code generation.
 
 Also worth fixing while in `schemas.js`: `hasDomside` is `required()` for behaviors too, yet
 `template/plugin.js:66` wraps the `SetDOMSideScripts` call in
