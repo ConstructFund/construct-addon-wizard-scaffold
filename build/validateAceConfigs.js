@@ -64,11 +64,17 @@ function validateAceType(type) {
     }
     let paramLength = 0;
     if (config.params) paramLength = config.params.length;
-    if (paramLength !== typeData.functions[name].length) {
+    const handlerLength = typeData.functions[name].length;
+    const badLength = config.isVariadicParameters
+      ? handlerLength < paramLength
+      : handlerLength !== paramLength;
+    if (badLength) {
       chalkUtils.error(
         `Function length mismatch for ${type} ${chalkUtils._errorUnderline(
           name
-        )}. Expected ${paramLength} but got ${typeData.functions[name].length}`
+        )}. Expected ${
+          config.isVariadicParameters ? `at least ${paramLength}` : paramLength
+        } but got ${handlerLength}`
       );
       hadError = true;
     }
