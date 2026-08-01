@@ -60,7 +60,7 @@ const commonSchema = {
   id: Joi.string().optional(),
   c2id: Joi.number().integer().optional(),
   highlight: Joi.boolean().default(false),
-  deprecated: Joi.boolean().default(false),
+  isDeprecated: Joi.boolean().default(false),
   listName: Joi.string().required(),
   displayText: Joi.string().required(),
   description: Joi.string().required().allow(""),
@@ -95,7 +95,7 @@ const expressionSchema = Joi.object({
   id: Joi.string().optional(),
   c2id: Joi.number().integer().optional(),
   highlight: Joi.boolean().default(false),
-  deprecated: Joi.boolean().default(false),
+  isDeprecated: Joi.boolean().default(false),
   returnType: Joi.string().required().valid("number", "string", "any"),
   isVariadicParameters: Joi.boolean().default(false),
   description: Joi.string().required().allow(""),
@@ -112,15 +112,20 @@ const propertySchema = Joi.object({
       "longtext",
       "check",
       "font",
-      "combo",
-      "color",
-      "object",
-      "group",
-      "link",
-      "info",
-      "projectfile"
+      "combo"
     )
-    .required(),
+    .required()
+    .when(Joi.ref("/addonType"), {
+      is: "plugin",
+      then: Joi.valid(
+        "color",
+        "object",
+        "projectfile",
+        "group",
+        "link",
+        "info"
+      ),
+    }),
 
   id: Joi.string().required(),
   name: Joi.string().required(),

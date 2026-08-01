@@ -1,6 +1,6 @@
 export const config = {
   highlight: false,
-  deprecated: false,
+  isDeprecated: false,
   isAsync: false,
   listName: "Sample Action Combo",
   displayText: "Sample Action Combo {0}",

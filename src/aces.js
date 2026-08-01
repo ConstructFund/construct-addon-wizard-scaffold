@@ -7,7 +7,7 @@ action(
   "SampleAction",
   {
     highlight: false,
-    deprecated: false,
+    isDeprecated: false,
     isAsync: false,
     listName: "Sample Action",
     displayText: "Sample Action {0}",
@@ -38,7 +38,7 @@ condition(
   "SampleCondition",
   {
     highlight: false,
-    deprecated: false,
+    isDeprecated: false,
     listName: "Sample Condition",
     displayText: "Sample Condition",
     description: "This is a sample condition",
@@ -55,7 +55,7 @@ expression(
   "SampleExpression",
   {
     highlight: false,
-    deprecated: false,
+    isDeprecated: false,
     returnType: "string",
     description: "This is a sample expression",
     params: [],
