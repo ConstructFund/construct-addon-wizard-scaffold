@@ -12,6 +12,7 @@ const buildSteps = [
   "./generateAceFiles.js",
   "./validateAceConfigs.js",
   "./validateExposedNames.js",
+  "./validateDomInstance.js",
   "./generateComboEnums.js",
   "./buildstepVite.js",
   "./generateAcesJSON.js",
