@@ -2,6 +2,12 @@ import fs from "fs";
 import path from "path";
 import * as config from "../config.caw.js";
 import { publishConfig } from "../buildconfig.js";
+import {
+  readChangelog,
+  sortVersions,
+  entryFor,
+  renderMarkdown,
+} from "./changelog.js";
 import * as chalkUtils from "./chalkUtils.js";
 import fromConsole from "./fromConsole.js";
 import {
@@ -30,77 +36,15 @@ function getFileExtension(filename) {
   return filename.slice(((filename.lastIndexOf(".") - 1) >>> 0) + 2);
 }
 
-function formatChangelogEntry(versionData) {
-  const changes = [];
-
-  const categories = [
-    { key: "added", label: "Added" },
-    { key: "changed", label: "Changed" },
-    { key: "fixed", label: "Fixed" },
-  ];
-
-  for (const { key, label } of categories) {
-    if (versionData[key]) {
-      const items = versionData[key]
-        .split("\n")
-        .map((s) => s.trim())
-        .filter(Boolean);
-      for (const item of items) {
-        changes.push(`- **${label}:** ${item}`);
-      }
-    }
-  }
-
-  return changes;
-}
-
 function getLatestChangelog(version) {
-  const changelogPath = path.join(__dirname, "CHANGELOG.json");
-  if (!fs.existsSync(changelogPath)) {
-    return null;
-  }
-
-  try {
-    const changelogContent = fs.readFileSync(changelogPath, "utf-8");
-    const changelog = JSON.parse(changelogContent);
-
-    if (!changelog[version]) {
-      return null;
-    }
-
-    const changes = formatChangelogEntry(changelog[version]);
-    return changes.length > 0 ? changes.join("\n") : null;
-  } catch (e) {
-    return null;
-  }
+  const entry = entryFor(readChangelog(), version);
+  return entry ? renderMarkdown([entry]) : null;
 }
 
 function getAllChangelogs() {
-  const changelogPath = path.join(__dirname, "CHANGELOG.json");
-  if (!fs.existsSync(changelogPath)) {
-    return null;
-  }
-
-  try {
-    const changelogContent = fs.readFileSync(changelogPath, "utf-8");
-    const changelog = JSON.parse(changelogContent);
-
-    // Sort versions in descending order (newest first)
-    const versions = Object.keys(changelog).sort((a, b) => {
-      const aParts = a.split(".").map(Number);
-      const bParts = b.split(".").map(Number);
-      for (let i = 0; i < 4; i++) {
-        if (aParts[i] !== bParts[i]) {
-          return bParts[i] - aParts[i];
-        }
-      }
-      return 0;
-    });
-
-    return { changelog, versions };
-  } catch (e) {
-    return null;
-  }
+  const changelog = readChangelog();
+  if (!changelog) return null;
+  return { changelog, versions: sortVersions(Object.keys(changelog)) };
 }
 
 const __dirname = path.resolve("../");
@@ -375,8 +319,8 @@ export default async function generateDocumentation() {
       const versionData = allChangelogs.changelog[version];
       readme.push(`**${version}**`);
 
-      const formattedChanges = formatChangelogEntry(versionData);
-      formattedChanges.forEach((line) => readme.push(line));
+      const entry = entryFor(allChangelogs.changelog, version);
+      if (entry) readme.push(renderMarkdown([entry]));
 
       readme.push(``);
     });
