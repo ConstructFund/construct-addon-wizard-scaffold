@@ -40,13 +40,10 @@ jobs:
         run: |
           version="${{ steps.getfile.outputs.version }}"
 
-          # Markdown for the GitHub release, BBCode for the Construct addon
-          # page. Same entries, rendered twice; the BBCode one is also cut to
-          # whatever the Construct field will take.
+          # The GitHub release covers this version alone; it gets one per push.
+          # The Construct notes are built further down, once the version that is
+          # actually live over there is known.
           node build/changelog.js --version="$version" --format=markdown > /tmp/notes.md
-          node build/changelog.js --version="$version" --format=bbcode \
-            --limit="$(node -e "import('./buildconfig.js').then(m => console.log(m.publishConfig?.releaseNotesLimit ?? 0))")" \
-            > /tmp/notes.bbcode
 
           if [ -s /tmp/notes.md ]; then
             echo "Found changelog for version $version"
@@ -89,7 +86,7 @@ jobs:
       - name: Install publish dependencies
         if: steps.check.outputs.publish == 'true'
         run: |
-          npm install -g c3addon@1.0.10
+          npm install -g c3addon
 
       - name: Get Addon Url
         if: steps.check.outputs.publish == 'true'
@@ -102,14 +99,63 @@ jobs:
           fi
           echo "url=$url" >> $GITHUB_OUTPUT
 
-      - name: Publish to Construct 3
+      - name: Get the version already published
         if: steps.check.outputs.publish == 'true' && steps.url.outputs.url != ''
+        id: live
+        run: |
+          raw="$(c3addon releases \
+            --addon-url "${{ steps.url.outputs.url }}" \
+            --username "${{ secrets.C3_AUTH_USER }}" \
+            --password "${{ secrets.C3_AUTH_PASSWORD }}" \
+            --latest 2>/dev/null | tail -n 1 || true)"
+
+          # The command logs as it goes, so only take the answer if it looks
+          # like a version rather than the last thing it happened to print.
+          latest=""
+          if echo "$raw" | grep -qE '^[0-9]+(\.[0-9]+){1,3}$'; then
+            latest="$raw"
+          fi
+
+          echo "Latest published on Construct: ${latest:-unknown}"
+          echo "version=$latest" >> $GITHUB_OUTPUT
+
+          if [ -n "$latest" ] && [ "$latest" = "${{ steps.getfile.outputs.version }}" ]; then
+            echo "${{ steps.getfile.outputs.version }} is already the published release. Skipping."
+            echo "skip=true" >> $GITHUB_OUTPUT
+          else
+            echo "skip=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Build the Construct release notes
+        if: steps.check.outputs.publish == 'true' && steps.url.outputs.url != '' && steps.live.outputs.skip != 'true'
+        run: |
+          # Everything released since Construct last saw one, so a run that
+          # failed to publish is not simply skipped over next time.
+          since=""
+          if [ -n "${{ steps.live.outputs.version }}" ]; then
+            since="--since=${{ steps.live.outputs.version }}"
+          fi
+
+          limit="$(node -e "import('./buildconfig.js').then(m => console.log(m.publishConfig?.releaseNotesLimit ?? 0))")"
+
+          node build/changelog.js \
+            --version="${{ steps.getfile.outputs.version }}" \
+            $since \
+            --format=bbcode \
+            --limit="$limit" > /tmp/notes.bbcode
+
+          echo "Release notes ($(wc -c < /tmp/notes.bbcode) of $limit chars):"
+          cat /tmp/notes.bbcode
+
+      - name: Publish to Construct 3
+        if: steps.check.outputs.publish == 'true' && steps.url.outputs.url != '' && steps.live.outputs.skip != 'true'
         run: |
           if [ -s /tmp/notes.bbcode ]; then
             release_notes="$(cat /tmp/notes.bbcode)"
           else
             release_notes="Released via GitHub Actions"
           fi
+
           c3addon publish "dist/${{ steps.getfile.outputs.filename }}" \
             --addon-url "${{ steps.url.outputs.url }}" \
             --username "${{ secrets.C3_AUTH_USER }}" \
