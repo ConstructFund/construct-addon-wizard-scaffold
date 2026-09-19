@@ -144,6 +144,8 @@ const propertySchema = Joi.object({
         },
         { is: "check", then: Joi.boolean().required() },
         { is: "combo", then: Joi.string().required() },
+        // The editor requires a font family name for font properties.
+        { is: "font", then: Joi.string().required() },
         {
           is: "color",
           then: Joi.array()
@@ -154,6 +156,8 @@ const propertySchema = Joi.object({
       ],
       otherwise: Joi.any().forbidden(),
     }),
+    // Accepted by SDK.PluginProperty for every property type.
+    templatable: Joi.boolean().optional(),
   })
     .required()
     .when("type", {
@@ -242,11 +246,12 @@ const configSchema = Joi.object({
     .required()
     .when("addonType", {
       is: "behavior",
-      then: Joi.string().valid("attributes", "general", "movements", "other"),
+      then: Joi.string().valid("3d", "attributes", "general", "movements", "other"),
       otherwise: Joi.string().valid(
         "3d",
         "data-and-storage",
         "form-controls",
+        "html-elements",
         "general",
         "input",
         "media",

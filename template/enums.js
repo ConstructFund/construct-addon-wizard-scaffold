@@ -5,6 +5,7 @@ export const ADDON_CATEGORY = {
   _3D: "3d",
   DATA_AND_STORAGE: "data-and-storage",
   FORM_CONTROLS: "form-controls",
+  HTML_ELEMENTS: "html-elements",
   INPUT: "input",
   MEDIA: "media",
   MONETISATION: "monetisation",
